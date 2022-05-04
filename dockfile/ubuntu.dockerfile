@@ -47,17 +47,15 @@ RUN chsh -s /bin/zsh \
     && git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.zsh/zsh-syntax-highlighting \
     && echo '# 命令高亮\nsource ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' >> ~/.zshrc \
     && /bin/zsh -c "source ~/.zshrc"
-# 7.vim设置， 当前尝试配置哈，错了就手动配置
-RUN curl -sLf https://spacevim.org/cn/install.sh | bash
 
 # 5.其他cpp开发环境需要的第三方库
-RUN apt-get install \
-    && libfmt-dev \
-    && libspdlog-dev \
+RUN apt-get install -y \
+    libfmt-dev \
+    libspdlog-dev
 
 # 6.vim设置，
 RUN git clone https://github.com/Runner-2019/resource.git \
-    && cd resource/scripts \
+    && cd resource/script \
     && bash vim_install.sh \
     && cd ../.. \
     && rm -rf ./resource
@@ -70,20 +68,20 @@ RUN git clone https://github.com/nlohmann/json.git \
   && mkdir build \
   && cd build \
   && cmake .. \
-  && make \
+  && make -j `nproc` \
   && make install \
-  && cd ../..
+  && cd ../.. \
   && rm -rf ./json
 
 # .2 gflags
-RUN git clone hhttps://github.com/gflags/gflags.git \
+RUN git clone https://github.com/gflags/gflags.git \
   && cd gflags \
   && mkdir build \
   && cd build \
   && cmake .. \
   && make \
   && make install \
-  && cd ../..
+  && cd ../.. \
   && rm -rf ./gflags
 
 CMD ["/bin/zsh"]
